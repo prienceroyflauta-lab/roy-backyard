@@ -1,0 +1,8 @@
+.env
+.git
+.vscode
+vendor
+app/vendor
+runtime/cache
+runtime/logs
+*.log
