@@ -140,15 +140,21 @@ $config['users_table'] = 'users';
 | Access-Control-Allow-Origin
 |--------------------------------------------------------------------------
 |
-| Set ALLOW_ORIGIN to the exact browser frontend origin in production,
-| for example https://your-frontend.onrender.com. The wildcard fallback
-| preserves local development when the environment variable is unset.
+| Set ALLOW_ORIGIN to one or more exact browser origins separated by commas.
+| The wildcard fallback preserves local development when it is unset.
 |
 */
-$allow_origin = getenv('ALLOW_ORIGIN');
-$config['allow_origin'] = $allow_origin !== false && trim($allow_origin) !== ''
-    ? trim($allow_origin)
-    : '*';
+$allow_origins = getenv('ALLOW_ORIGIN');
+if ($allow_origins !== false && trim($allow_origins) !== '') {
+    $config['allow_origin'] = array_values(array_filter(
+        array_map('trim', explode(',', $allow_origins)),
+        static function ($origin) {
+            return $origin !== '';
+        }
+    ));
+} else {
+    $config['allow_origin'] = '*';
+}
 
 /*
 |--------------------------------------------------------------------------
