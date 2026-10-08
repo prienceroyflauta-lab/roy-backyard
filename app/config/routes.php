@@ -46,6 +46,10 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 $router->get('/', 'Welcome::index');
 
+// Public database health check
+$router->get('api', 'HealthApi::index');
+$router->get('api/health', 'HealthApi::index');
+
 // Product API
 $router->post('api/auth/register', 'AuthApi::register');
 $router->post('api/auth/login', 'AuthApi::login');

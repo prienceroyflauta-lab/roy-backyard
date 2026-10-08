@@ -255,6 +255,8 @@ Open `http://127.0.0.1:3000/`, register a user, then manage products. Passwords 
 
 | Method | Endpoint | Access |
 | --- | --- | --- |
+| GET | `/api` | Public; checks database connectivity |
+| GET | `/api/health` | Public; checks database connectivity |
 | POST | `/api/auth/register` | Public; creates a user account |
 | POST | `/api/auth/login` | Public; returns access and refresh tokens |
 | POST | `/api/auth/refresh` | Public; rotates a valid refresh token |
