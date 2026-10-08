@@ -57,6 +57,11 @@ $router->post('api/auth/refresh', 'AuthApi::refresh');
 $router->post('api/auth/logout', 'AuthApi::logout');
 $router->get('api/auth/me', 'AuthApi::me');
 
+// Authenticated user management
+$router->get('api/users', 'UsersApi::index');
+$router->put('api/users/{id}', 'UsersApi::update');
+$router->delete('api/users/{id}', 'UsersApi::destroy');
+
 $router->get('api/products', 'ProductsApi::index');
 $router->get('api/products/{id}', 'ProductsApi::show');
 $router->post('api/products', 'ProductsApi::store');

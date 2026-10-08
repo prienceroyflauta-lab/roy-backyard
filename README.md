@@ -262,6 +262,9 @@ Open `http://127.0.0.1:3000/`, register a user, then manage products. Passwords 
 | POST | `/api/auth/refresh` | Public; rotates a valid refresh token |
 | POST | `/api/auth/logout` | Public; requires a valid refresh token in the JSON body and revokes it |
 | GET | `/api/auth/me` | Bearer access token |
+| GET | `/api/users` | Bearer access token; lists users without password hashes |
+| PUT | `/api/users/{id}` | Bearer access token; updates username or email; admins can also change roles |
+| DELETE | `/api/users/{id}` | Bearer access token; removes users and revokes their refresh tokens; only admins can remove admin accounts |
 | GET | `/api/products` | Bearer access token |
 | GET | `/api/products/{id}` | Bearer access token |
 | POST | `/api/products` | Bearer access token |
