@@ -260,7 +260,7 @@ Open `http://127.0.0.1:3000/`, register a user, then manage products. Passwords 
 | POST | `/api/auth/register` | Public; creates a user account |
 | POST | `/api/auth/login` | Public; returns access and refresh tokens |
 | POST | `/api/auth/refresh` | Public; rotates a valid refresh token |
-| POST | `/api/auth/logout` | Bearer access token |
+| POST | `/api/auth/logout` | Public; requires a valid refresh token in the JSON body and revokes it |
 | GET | `/api/auth/me` | Bearer access token |
 | GET | `/api/products` | Bearer access token |
 | GET | `/api/products/{id}` | Bearer access token |

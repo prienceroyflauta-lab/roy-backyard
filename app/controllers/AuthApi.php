@@ -113,17 +113,19 @@ class AuthApi extends Controller
 
     public function logout()
     {
-        $payload = $this->api->require_jwt();
+        $this->api->require_method('POST');
         $body = $this->api->body();
         $refresh_token = trim((string) ($body['refresh_token'] ?? ''));
 
-        if ($refresh_token !== '') {
-            $refresh_payload = $this->api->validate_jwt($refresh_token, 'refresh');
-            if ($refresh_payload && (string) $refresh_payload['sub'] === (string) $payload['sub']) {
-                $this->api->revoke_refresh_token($refresh_token);
-            }
+        if ($refresh_token === '') {
+            $this->api->respond_error('Refresh token is required.', 422);
         }
 
+        if (!$this->api->validate_jwt($refresh_token, 'refresh')) {
+            $this->api->respond_error('Invalid refresh token.', 403);
+        }
+
+        $this->api->revoke_refresh_token($refresh_token);
         $this->api->respond(['message' => 'Logged out successfully.']);
     }
 
