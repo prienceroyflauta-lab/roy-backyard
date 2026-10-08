@@ -201,6 +201,23 @@ if ( ! function_exists('_exception_handler'))
 		$request_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 		if (is_string($request_path) && preg_match('#(?:^|/)api(?:/|$)#', $request_path))
 		{
+			$exception_message = $e->getMessage();
+			foreach (['APP_KEY', 'DB_PASSWORD', 'JWT_SECRET', 'REFRESH_TOKEN_KEY'] as $secret_name)
+			{
+				$secret = getenv($secret_name);
+				if (is_string($secret) && $secret !== '')
+				{
+					$exception_message = str_replace($secret, '[redacted]', $exception_message);
+				}
+			}
+			error_log(sprintf(
+				'Unhandled API exception %s at %s:%d: %s',
+				get_class($e),
+				basename($e->getFile()),
+				$e->getLine(),
+				$exception_message
+			));
+
 			header('Content-Type: application/json; charset=utf-8');
 			header('X-Content-Type-Options: nosniff');
 			echo json_encode(
