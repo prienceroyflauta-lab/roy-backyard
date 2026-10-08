@@ -161,8 +161,12 @@ class Api
     public function __construct()
     {
         $this->_lava = lava_instance();
-        $this->_lava->call->library('cache');
         $this->_lava->config->load('api');
+
+        // Send CORS headers before database setup so API errors remain readable to browsers.
+        handle_cors();
+
+        $this->_lava->call->library('cache');
         $this->_lava->call->database();
 
         if (!config_item('api_helper_enabled')) {
@@ -196,7 +200,6 @@ class Api
             show_error('jwt_secret and refresh_token_key must be different values.');
         }
 
-        handle_cors();
     }
 
     /**

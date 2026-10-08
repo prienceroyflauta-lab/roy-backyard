@@ -140,12 +140,15 @@ $config['users_table'] = 'users';
 | Access-Control-Allow-Origin
 |--------------------------------------------------------------------------
 |
-| Access-Control-Allow-Origin - change this to your domain if
-| already deployed. '*' allows any website to call your API from
-| a browser, so set your real domain in production.
+| Set ALLOW_ORIGIN to the exact browser frontend origin in production,
+| for example https://your-frontend.onrender.com. The wildcard fallback
+| preserves local development when the environment variable is unset.
 |
 */
-$config['allow_origin'] = '*';
+$allow_origin = getenv('ALLOW_ORIGIN');
+$config['allow_origin'] = $allow_origin !== false && trim($allow_origin) !== ''
+    ? trim($allow_origin)
+    : '*';
 
 /*
 |--------------------------------------------------------------------------

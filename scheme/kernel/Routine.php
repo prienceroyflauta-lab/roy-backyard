@@ -191,12 +191,32 @@ if ( ! function_exists('_exception_handler'))
 			$logger = load_class('logger', 'kernel');
 			$logger->log('error', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
 		}
-		if(strtolower(config_item('environment') == 'development'))
+		if (strtolower((string) config_item('environment')) === 'development')
 		{
 			$exception = load_class('Errors', 'kernel');
 			$exception->show_exception($e);
 		}
-		
+
+		http_response_code(500);
+		$request_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+		if (is_string($request_path) && preg_match('#(?:^|/)api(?:/|$)#', $request_path))
+		{
+			header('Content-Type: application/json; charset=utf-8');
+			header('X-Content-Type-Options: nosniff');
+			echo json_encode(
+				['error' => 'An unexpected server error occurred.', 'status' => 500],
+				JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+			);
+			return;
+		}
+
+		$errors = load_class('Errors', 'kernel');
+		$errors->show_error(
+			'500 Internal Server Error',
+			'An unexpected server error occurred. Please try again later.',
+			'error_general',
+			500
+		);
 	}
 }
 

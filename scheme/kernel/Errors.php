@@ -137,6 +137,17 @@ class Errors
 	public function show_database_error($message, $sql = '', $bindings = [], $exception = null, $template = 'error_db')
 	{
 		http_response_code(500);
+
+		$request_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+		if (is_string($request_path) && preg_match('#(?:^|/)api(?:/|$)#', $request_path)) {
+			header('Content-Type: application/json; charset=utf-8');
+			header('X-Content-Type-Options: nosniff');
+			echo json_encode(
+				['error' => 'Database connection failed.', 'status' => 500],
+				JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+			);
+			exit();
+		}
 		
 		if (config_item('environment') !== 'development') {
 			exit();
