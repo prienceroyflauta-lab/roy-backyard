@@ -5,6 +5,10 @@ FROM php:${PHP_VERSION}-apache
 # Install PDO MySQL
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Allow Apache's application user to read Render-mounted secret files.
+RUN if ! getent group 1000 >/dev/null; then groupadd --gid 1000 render-secrets; fi \
+&& usermod -aG "$(getent group 1000 | cut -d: -f1)" www-data
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
