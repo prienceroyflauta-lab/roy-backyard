@@ -70,7 +70,7 @@ class AuthApi extends Controller
         $this->api->rate_limit('auth-login', 10, 300);
         $body = $this->api->body();
 
-        $identity = trim((string) ($body['identity'] ?? ''));
+        $identity = trim((string) ($body['identity'] ?? $body['username'] ?? ''));
         $password = (string) ($body['password'] ?? '');
 
         if ($identity === '' || $password === '') {
